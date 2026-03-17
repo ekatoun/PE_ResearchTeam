@@ -133,7 +133,7 @@ async function handleSubmit(e) {
   try {
     const data = collectFormData();
 
-    const response = await fetch('http://localhost:8000/api/reponses/', {
+    const response = await fetch('/api/reponses/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

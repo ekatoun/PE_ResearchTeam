@@ -3,6 +3,7 @@
 #  Application Flask principale
 # ================================================
 
+from flask import send_from_directory
 import csv
 import io
 import os
@@ -30,6 +31,18 @@ from models import db, Utilisateur, Reponse
 load_dotenv()
 
 app = Flask(__name__)
+# ── Serve frontend static files ───────────────
+@app.route('/')
+def index():
+    return send_from_directory('../frontend', 'index.html')
+
+@app.route('/style.css')
+def styles():
+    return send_from_directory('../frontend', 'style.css')
+
+@app.route('/script.js')
+def scripts():
+    return send_from_directory('../frontend', 'script.js')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret')
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}"
