@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire – Étude sur la Prééclampsie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     EN-TÊTE
+════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-badge">Étude clinique</div>
+  <h1>Questionnaire de recrutement<br>pour l'étude sur la Prééclampsie</h1>
+  <p>Dépistage des femmes enceintes à risque de prééclampsie</p>
+</header>
+
+<!-- ══════════════════════════════════════
+     BARRE DE PROGRESSION
+════════════════════════════════════════ -->
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <span class="progress-label">Progression</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FORMULAIRE PRINCIPAL
+════════════════════════════════════════ -->
+<form class="form-wrap" id="mainForm" onsubmit="handleSubmit(event)" novalidate>
+
+  <!-- ══════════ SECTION A ══════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">A</div>
+      <h2>Informations démographiques</h2>
+    </div>
+    <div class="section-body">
+
+      <!-- Identification -->
+      <div class="subsection">
+        <div class="subsection-title">Identification de la participante</div>
+        <div class="field-row">
+          <div class="field">
+            <label>N° d'identification de l'étude</label>
+            <input type="text" name="id_etude" placeholder="ex: 001/01">
+          </div>
+          <div class="field">
+            <label>Date de l'entretien</label>
+            <input type="date" name="date_entretien">
+          </div>
+        </div>
+      </div>
+
+      <!-- Âge maternel -->
+      <div class="subsection">
+        <div class="subsection-title">Âge maternel</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Date de naissance</label>
+            <input type="date" name="date_naissance" id="dateNaissance" onchange="calcAge()">
+          </div>
+          <div class="field">
+            <label>Âge actuel (ans)</label>
+            <input type="number" name="age_actuel" id="ageActuel" placeholder="Calculé automatiquement" min="10" max="60">
+          </div>
+        </div>
+      </div>
+
+      <!-- Anthropométrie -->
+      <div class="subsection">
+        <div class="subsection-title">Caractéristiques anthropométriques</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Poids (kg)</label>
+            <input type="number" name="poids" id="poids" placeholder="ex: 65" step="0.1" onchange="calcIMC()">
+          </div>
+          <div class="field">
+            <label>Taille (cm)</label>
+            <input type="number" name="taille" id="taille" placeholder="ex: 165" onchange="calcIMC()">
+          </div>
+          <div class="field">
+            <label>IMC (kg/m²)</label>
+            <input type="number" name="imc" id="imcInput" placeholder="Calculé auto." step="0.01" readonly>
+          </div>
+        </div>
+        <div class="imc-result" id="imcResult">
+          <span>IMC :</span>
+          <span class="imc-value" id="imcVal">–</span>
+          <span id="imcCat">–</span>
+        </div>
+        <input type="hidden" name="imc_categorie" id="imcCategorie">
+      </div>
+
+      <!-- Éducation -->
+      <div class="subsection">
+        <div class="subsection-title">Niveau d'éducation</div>
+        <label>Quel est votre niveau d'éducation ?</label>
+        <div class="options-list">
+          <label class="opt-label"><input type="radio" name="education" value="primaire"> Études primaires</label>
+          <label class="opt-label"><input type="radio" name="education" value="secondaire_college"> Études secondaires (collège)</label>
+          <label class="opt-label"><input type="radio" name="education" value="secondaire_lycee"> Études secondaires (lycée)</label>
+          <label class="opt-label"><input type="radio" name="education" value="superieur"> Études supérieures (université)</label>
+        </div>
+      </div>
+
+      <!-- Résidence -->
+      <div class="subsection">
+        <div class="subsection-title">Lieu de résidence</div>
+        <label>Quel est votre lieu de résidence ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="residence" value="urbain"> Urbain</label>
+          <label class="opt-label"><input type="radio" name="residence" value="rural"> Rural</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION B ══════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">B</div>
+      <h2>Grossesse actuelle</h2>
+    </div>
+    <div class="section-body">
+
+      <!-- Âge gestationnel -->
+      <div class="subsection">
+        <div class="subsection-title">Âge gestationnel actuel</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Date des dernières règles (DDR)</label>
+            <input type="date" name="ddr">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Semaines</label>
+            <input type="number" name="ag_semaines" placeholder="ex: 28" min="0" max="45">
+          </div>
+          <div class="field">
+            <label>Jours</label>
+            <input type="number" name="ag_jours" placeholder="ex: 3" min="0" max="6">
+          </div>
+        </div>
+        <div class="field">
+          <label>Méthode de datation</label>
+          <div class="options-grid">
+            <label class="opt-label"><input type="radio" name="methode_datation" value="ddr"> DDR</label>
+            <label class="opt-label"><input type="radio" name="methode_datation" value="echographie"> Échographie</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Type de grossesse -->
+      <div class="subsection">
+        <div class="subsection-title">Type de grossesse</div>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="type_grossesse" value="unique"> Unique</label>
+          <label class="opt-label"><input type="radio" name="type_grossesse" value="gemellaire"> Gémellaire</label>
+          <label class="opt-label"><input type="radio" name="type_grossesse" value="multiple"> Multiple</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION C ══════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">C</div>
+      <h2>Antécédents médicaux</h2>
+    </div>
+    <div class="section-body">
+
+      <!-- HTA chronique -->
+      <div class="subsection">
+        <div class="subsection-title">Hypertension artérielle chronique</div>
+        <label>Avez-vous déjà reçu un diagnostic d'HTA chronique ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="hta" value="oui"         onchange="toggle('hta_details', this.value==='oui')"> Oui</label>
+          <label class="opt-label"><input type="radio" name="hta" value="non"         onchange="toggle('hta_details', false)"> Non</label>
+          <label class="opt-label"><input type="radio" name="hta" value="ne_sait_pas" onchange="toggle('hta_details', false)"> Ne sait pas</label>
+        </div>
+        <div class="conditional" id="hta_details">
+          <div class="field-row">
+            <div class="field">
+              <label>Date du diagnostic (MM/AAAA)</label>
+              <input type="text" name="hta_date_diag" placeholder="ex: 03/2020">
+            </div>
+            <div class="field">
+              <label>Durée de l'hypertension (ans)</label>
+              <input type="number" name="hta_duree" placeholder="ex: 3" min="0">
+            </div>
+          </div>
+          <div class="field">
+            <label>Prenez-vous des médicaments antihypertenseurs ?</label>
+            <div class="options-grid">
+              <label class="opt-label"><input type="radio" name="hta_medicaments" value="oui" onchange="toggle('hta_med_detail', this.value==='oui')"> Oui</label>
+              <label class="opt-label"><input type="radio" name="hta_medicaments" value="non" onchange="toggle('hta_med_detail', false)"> Non</label>
+            </div>
+            <div class="conditional" id="hta_med_detail">
+              <div class="field">
+                <label>Préciser les médicaments</label>
+                <input type="text" name="hta_medicaments_detail" placeholder="Nom(s) du/des médicament(s)">
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>TA systolique habituelle avant grossesse (mmHg)</label>
+              <input type="number" name="tas_avant" placeholder="ex: 140" min="60" max="250">
+            </div>
+            <div class="field">
+              <label>TA diastolique habituelle avant grossesse (mmHg)</label>
+              <input type="number" name="tad_avant" placeholder="ex: 90" min="40" max="150">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maladie rénale -->
+      <div class="subsection">
+        <div class="subsection-title">Maladie rénale chronique</div>
+        <label>Avez-vous une maladie rénale chronique ou une insuffisance rénale ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="renale" value="oui"         onchange="toggle('renale_details', true)"> Oui</label>
+          <label class="opt-label"><input type="radio" name="renale" value="non"         onchange="toggle('renale_details', false)"> Non</label>
+          <label class="opt-label"><input type="radio" name="renale" value="ne_sait_pas" onchange="toggle('renale_details', false)"> Ne sait pas</label>
+        </div>
+        <div class="conditional" id="renale_details">
+          <div class="field">
+            <label>Type de maladie rénale</label>
+            <div class="options-list">
+              <label class="opt-label"><input type="checkbox" name="renale_type[]" value="irc"> Insuffisance rénale chronique</label>
+              <label class="opt-label"><input type="checkbox" name="renale_type[]" value="nephro_diab"> Néphropathie diabétique</label>
+              <label class="opt-label"><input type="checkbox" name="renale_type[]" value="glomerulonephrite"> Glomérulonéphrite</label>
+              <label class="opt-label"><input type="checkbox" name="renale_type[]" value="polykystique"> Maladie polykystique des reins</label>
+              <label class="opt-label"><input type="checkbox" name="renale_type[]" value="autre"> Autre</label>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <input type="text" name="renale_type_autre" placeholder="Si autre, préciser…">
+            </div>
+          </div>
+          <div class="field">
+            <label>Dialyse / transplantation rénale ?</label>
+            <div class="options-list">
+              <label class="opt-label"><input type="radio" name="dialyse" value="dialyse"> Dialyse</label>
+              <label class="opt-label"><input type="radio" name="dialyse" value="transplantation"> Transplantation rénale</label>
+              <label class="opt-label"><input type="radio" name="dialyse" value="non"> Non</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diabète -->
+      <div class="subsection">
+        <div class="subsection-title">Diabète</div>
+        <label>Avez-vous un diabète diagnostiqué avant cette grossesse ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="diabete" value="oui"         onchange="toggle('diabete_details', true)"> Oui</label>
+          <label class="opt-label"><input type="radio" name="diabete" value="non"         onchange="toggle('diabete_details', false)"> Non</label>
+          <label class="opt-label"><input type="radio" name="diabete" value="ne_sait_pas" onchange="toggle('diabete_details', false)"> Ne sait pas</label>
+        </div>
+        <div class="conditional" id="diabete_details">
+          <div class="field">
+            <label>Type de diabète</label>
+            <div class="options-grid">
+              <label class="opt-label"><input type="radio" name="diabete_type" value="type1"> Diabète de type I</label>
+              <label class="opt-label"><input type="radio" name="diabete_type" value="type2"> Diabète de type II</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Traitement actuel</label>
+            <div class="options-list">
+              <label class="opt-label"><input type="checkbox" name="diabete_ttt[]" value="insuline"> Insuline</label>
+              <label class="opt-label"><input type="checkbox" name="diabete_ttt[]" value="ado"> Antidiabétiques oraux</label>
+              <label class="opt-label"><input type="checkbox" name="diabete_ttt[]" value="regime"> Régime alimentaire seul</label>
+              <label class="opt-label"><input type="checkbox" name="diabete_ttt[]" value="autre"> Autre</label>
+            </div>
+            <div class="field" style="margin-top:8px">
+              <input type="text" name="diabete_ttt_autre" placeholder="Si autre, préciser…">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maladies auto-immunes -->
+      <div class="subsection">
+        <div class="subsection-title">Maladies auto-immunes</div>
+        <label>Avez-vous l'une des maladies auto-immunes suivantes ?</label>
+        <div class="options-list">
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="led"> Lupus érythémateux disséminé (LED)</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="sapl"> Syndrome des antiphospholipides</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="polyarthrite"> Polyarthrite rhumatoïde</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="sclerodermie"> Sclérodermie</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="sjogren"> Syndrome de Sjögren</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="thyroidite"> Thyroïdite auto-immune</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="autre"> Autre</label>
+          <label class="opt-label"><input type="checkbox" name="autoimmune[]" value="aucune"> Aucune</label>
+        </div>
+        <div class="field" style="margin-top:8px">
+          <input type="text" name="autoimmune_autre" placeholder="Si autre, préciser…">
+        </div>
+      </div>
+
+      <!-- Autres conditions chroniques -->
+      <div class="subsection">
+        <div class="subsection-title">Autres conditions médicales chroniques</div>
+        <label>Avez-vous l'une des conditions médicales suivantes ?</label>
+        <div class="options-list">
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="apnee"> Apnée obstructive du sommeil</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="cardiovasculaire"> Maladies cardiovasculaires</label>
+          <div class="conditional visible" id="cv_detail_wrap" style="margin: 0 0 0 28px; padding: 8px 14px;">
+            <input type="text" name="cardio_detail" placeholder="Préciser la maladie cardiovasculaire">
+          </div>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="hepatique"> Maladie hépatique chronique</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="crohn"> Maladie de Crohn ou colite ulcéreuse</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="hyperthyroidie"> Hyperthyroïdie</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="hypothyroidie"> Hypothyroïdie</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="thrombophilie"> Thrombophilie</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="autre_chronique"> Autre condition chronique</label>
+          <label class="opt-label"><input type="checkbox" name="autres_conditions[]" value="aucune"> Aucune</label>
+        </div>
+        <div class="field-row" style="margin-top:10px; gap:10px">
+          <div class="field">
+            <input type="text" name="thrombophilie_detail" placeholder="Si thrombophilie, préciser…">
+          </div>
+          <div class="field">
+            <input type="text" name="autre_chronique_detail" placeholder="Si autre condition, préciser…">
+          </div>
+        </div>
+      </div>
+
+      <!-- Antécédents familiaux -->
+      <div class="subsection">
+        <div class="subsection-title">Antécédents familiaux</div>
+        <label>Avez-vous des antécédents familiaux de :</label>
+        <div class="options-list">
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="preeclampsie_mere"> Prééclampsie chez votre mère</label>
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="preeclampsie_soeur"> Prééclampsie chez votre sœur</label>
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="hta"> Hypertension artérielle</label>
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="coronarien"> Maladie coronarienne précoce</label>
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="avc"> Accident vasculaire cérébral</label>
+          <label class="opt-label"><input type="checkbox" name="atcd_familiaux[]" value="aucun"> Aucun</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════ SECTION D ══════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-letter">D</div>
+      <h2>Antécédents de grossesse</h2>
+    </div>
+    <div class="section-body">
+
+      <!-- Parité -->
+      <div class="subsection">
+        <div class="subsection-title">Parité</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nombre total de grossesses</label>
+            <input type="number" name="nb_grossesses" placeholder="ex: 2" min="0">
+          </div>
+          <div class="field">
+            <label>Nombre d'accouchements</label>
+            <input type="number" name="nb_accouchements" placeholder="ex: 1" min="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Statut de parité</label>
+          <div class="options-grid">
+            <label class="opt-label"><input type="radio" name="parite" value="nullipare"> Nullipare</label>
+            <label class="opt-label"><input type="radio" name="parite" value="primipare"> Primipare</label>
+            <label class="opt-label"><input type="radio" name="parite" value="multipare"> Multipare</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Antécédents de prééclampsie -->
+      <div class="subsection">
+        <div class="subsection-title">Antécédents de prééclampsie</div>
+        <label>Avez-vous déjà eu une prééclampsie lors d'une grossesse antérieure ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="atcd_pe" value="oui"         onchange="toggle('pe_grossesses', true)"> Oui</label>
+          <label class="opt-label"><input type="radio" name="atcd_pe" value="non"         onchange="toggle('pe_grossesses', false)"> Non</label>
+          <label class="opt-label"><input type="radio" name="atcd_pe" value="ne_sait_pas" onchange="toggle('pe_grossesses', false)"> Ne sait pas</label>
+        </div>
+
+        <div class="conditional" id="pe_grossesses">
+
+          <!-- Grossesse 1 -->
+          <div class="pregnancy-block">
+            <h4>Grossesse 1</h4>
+            <div class="field-row">
+              <div class="field">
+                <label>Année de grossesse</label>
+                <input type="number" name="pe1_annee" placeholder="ex: 2019" min="1980" max="2030">
+              </div>
+              <div class="field">
+                <label>AG au diagnostic (semaines)</label>
+                <input type="number" name="pe1_ag_diag" placeholder="ex: 32" min="0" max="45">
+              </div>
+            </div>
+            <div class="field">
+              <label>Sévérité</label>
+              <div class="options-grid">
+                <label class="opt-label"><input type="radio" name="pe1_severite" value="legere"> Légère</label>
+                <label class="opt-label"><input type="radio" name="pe1_severite" value="severe"> Sévère</label>
+                <label class="opt-label"><input type="radio" name="pe1_severite" value="ne_sait_pas"> Ne sait pas</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>AG à l'accouchement (semaines)</label>
+              <input type="number" name="pe1_ag_accouchement" placeholder="ex: 35" min="0" max="45">
+            </div>
+            <div class="field">
+              <label>Complications</label>
+              <div class="options-list">
+                <label class="opt-label"><input type="checkbox" name="pe1_complic[]" value="eclampsie"> Éclampsie</label>
+                <label class="opt-label"><input type="checkbox" name="pe1_complic[]" value="hellp"> Syndrome HELLP</label>
+                <label class="opt-label"><input type="checkbox" name="pe1_complic[]" value="decollement"> Décollement placentaire</label>
+                <label class="opt-label"><input type="checkbox" name="pe1_complic[]" value="autre"> Autre</label>
+              </div>
+              <input type="text" name="pe1_complic_autre" placeholder="Si autre, préciser…" style="margin-top:8px">
+            </div>
+          </div>
+
+          <!-- Grossesse 2 -->
+          <div class="pregnancy-block">
+            <h4>Grossesse 2</h4>
+            <div class="field-row">
+              <div class="field">
+                <label>Année de grossesse</label>
+                <input type="number" name="pe2_annee" placeholder="ex: 2021" min="1980" max="2030">
+              </div>
+              <div class="field">
+                <label>AG au diagnostic (semaines)</label>
+                <input type="number" name="pe2_ag_diag" placeholder="ex: 30" min="0" max="45">
+              </div>
+            </div>
+            <div class="field">
+              <label>Sévérité</label>
+              <div class="options-grid">
+                <label class="opt-label"><input type="radio" name="pe2_severite" value="legere"> Légère</label>
+                <label class="opt-label"><input type="radio" name="pe2_severite" value="severe"> Sévère</label>
+                <label class="opt-label"><input type="radio" name="pe2_severite" value="ne_sait_pas"> Ne sait pas</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>AG à l'accouchement (semaines)</label>
+              <input type="number" name="pe2_ag_accouchement" placeholder="ex: 33" min="0" max="45">
+            </div>
+            <div class="field">
+              <label>Complications</label>
+              <div class="options-list">
+                <label class="opt-label"><input type="checkbox" name="pe2_complic[]" value="eclampsie"> Éclampsie</label>
+                <label class="opt-label"><input type="checkbox" name="pe2_complic[]" value="hellp"> Syndrome HELLP</label>
+                <label class="opt-label"><input type="checkbox" name="pe2_complic[]" value="decollement"> Décollement placentaire</label>
+                <label class="opt-label"><input type="checkbox" name="pe2_complic[]" value="autre"> Autre</label>
+              </div>
+              <input type="text" name="pe2_complic_autre" placeholder="Si autre, préciser…" style="margin-top:8px">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Autres complications -->
+      <div class="subsection">
+        <div class="subsection-title">Autres complications de grossesse antérieures</div>
+        <label>Avez-vous eu l'une des complications suivantes ?</label>
+        <div class="options-list">
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="hta_gest"> Hypertension gestationnelle</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="rciu"> Retard de croissance intra-utérin (RCIU)</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="premature"> Accouchement prématuré spontané</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="decollement"> Décollement placentaire</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="mfiu"> Mort fœtale in utero</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="diabete_gest"> Diabète gestationnel</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="autre"> Autre complication</label>
+          <label class="opt-label"><input type="checkbox" name="complic_ant[]" value="aucune"> Aucune complication</label>
+        </div>
+      </div>
+
+      <!-- Fausses couches -->
+      <div class="subsection">
+        <div class="subsection-title">Fausses couches et pertes fœtales</div>
+        <label>Avez-vous eu des fausses couches ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="fcs" value="oui" onchange="toggle('fcs_nb', true)"> Oui</label>
+          <label class="opt-label"><input type="radio" name="fcs" value="non" onchange="toggle('fcs_nb', false)"> Non</label>
+        </div>
+        <div class="conditional" id="fcs_nb">
+          <div class="field">
+            <label>Nombre de fausses couches</label>
+            <input type="number" name="fcs_nombre" placeholder="ex: 2" min="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Intervalle intergénésique -->
+      <div class="subsection">
+        <div class="subsection-title">Intervalle intergénésique</div>
+        <label>Si grossesse antérieure, quel est l'intervalle depuis votre dernier accouchement ?</label>
+        <div class="options-grid">
+          <label class="opt-label"><input type="radio" name="intervalle" value="moins2ans"> &lt; 2 ans</label>
+          <label class="opt-label"><input type="radio" name="intervalle" value="2_5ans"> 2–5 ans</label>
+          <label class="opt-label"><input type="radio" name="intervalle" value="6_10ans"> 6–10 ans</label>
+          <label class="opt-label"><input type="radio" name="intervalle" value="plus10ans"> &gt; 10 ans</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button type="submit" class="btn-submit">Soumettre le questionnaire</button>
+  </div>
+
+</form>
+
+<!-- Toast de confirmation -->
+<div class="toast" id="toast">✓ Questionnaire soumis avec succès</div>
+
+<script src="script.js"></script>
+</body>
+</html>
