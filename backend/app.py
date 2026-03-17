@@ -31,18 +31,23 @@ from models import db, Utilisateur, Reponse
 load_dotenv()
 
 app = Flask(__name__)
+
+import os
+
 # ── Serve frontend static files ───────────────
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'frontend')
+
 @app.route('/')
 def index():
-    return send_from_directory('../frontend', 'index.html')
+    return send_from_directory(FRONTEND_DIR, 'index.html')
 
 @app.route('/style.css')
 def styles():
-    return send_from_directory('../frontend', 'style.css')
+    return send_from_directory(FRONTEND_DIR, 'style.css')
 
 @app.route('/script.js')
 def scripts():
-    return send_from_directory('../frontend', 'script.js')
+    return send_from_directory(FRONTEND_DIR, 'script.js')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret')
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}"
